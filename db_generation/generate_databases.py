@@ -18,7 +18,7 @@ path = os.path.abspath(os.getcwd())
 
 if os.name == 'nt':
         path_db = path + '\\db'
-    else: 
+else: 
         path_db = path + '/db'
 
 save_database	      = 0
