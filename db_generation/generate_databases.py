@@ -15,14 +15,18 @@ from EM_imputation import *
 #%%
 #
 path = os.path.abspath(os.getcwd())
-path_db = path + '\\db'
 
-save_database	      = 1
-save_database_no_year = 1
-save_database_ratios = 1
+if os.name == 'nt':
+        path_db = path + '\\db'
+    else: 
+        path_db = path + '/db'
 
-run_imputation = 1
-save_imputed_db = 1 
+save_database	      = 0
+save_database_no_year = 0
+save_database_ratios = 0
+
+run_imputation = 0
+save_imputed_db = 0 
 
 
 #%%

@@ -15,6 +15,68 @@ import matplotlib.pyplot as plt
 
 # This module contains and classes needed to load data and display results
 
+#%%
+# plot NN graph
+
+def draw_neural_net(left = .1, right = .9, bottom = .1, top = .9, layer_sizes = [5, 10, 1]):
+    '''
+    Draw a neural network cartoon using matplotilb.
+    
+    :usage:
+        >>> fig = plt.figure(figsize=(12, 12))
+        >>> draw_neural_net(fig.gca(), .1, .9, .1, .9, [4, 7, 2])
+    
+    :parameters:
+        - ax : matplotlib.axes.AxesSubplot
+            The axes on which to plot the cartoon (get e.g. by plt.gca())
+        - left : float
+            The center of the leftmost node(s) will be placed here
+        - right : float
+            The center of the rightmost node(s) will be placed here
+        - bottom : float
+            The center of the bottommost node(s) will be placed here
+        - top : float
+            The center of the topmost node(s) will be placed here
+        - layer_sizes : list of int
+            List of layer sizes, including input and output dimensionality
+    '''
+    try:
+        ax = fig.gca(), 
+    except:
+        fig = plt.figure(figsize=(12, 12))
+        ax = fig.gca()
+    
+    
+    n_layers = len(layer_sizes)
+    v_spacing = (top - bottom)/float(max(layer_sizes))
+    h_spacing = (right - left)/float(len(layer_sizes) - 1)
+    # Nodes
+    for n, layer_size in enumerate(layer_sizes):
+        layer_top = v_spacing*(layer_size - 1)/2. + (top + bottom)/2.
+        for m in range(layer_size):
+            if n == 0:
+                color = 'g'
+            elif n ==  len(layer_sizes)-1:
+                color = 'r'
+            else:
+                color = 'w'
+                
+            circle = plt.Circle((n*h_spacing + left, layer_top - m*v_spacing), v_spacing/4.,
+                                color=color, ec='k', zorder=4)
+            ax.add_artist(circle)
+    # Edges
+    for n, (layer_size_a, layer_size_b) in enumerate(zip(layer_sizes[:-1], layer_sizes[1:])):
+        layer_top_a = v_spacing*(layer_size_a - 1)/2. + (top + bottom)/2.
+        layer_top_b = v_spacing*(layer_size_b - 1)/2. + (top + bottom)/2.
+        for m in range(layer_size_a):
+            for o in range(layer_size_b):
+                line = plt.Line2D([n*h_spacing + left, (n + 1)*h_spacing + left],
+                                  [layer_top_a - m*v_spacing, layer_top_b - o*v_spacing], c='k')
+                ax.add_artist(line)
+    
+    return fig
+
+
 
 #%%
 
@@ -68,12 +130,12 @@ def plot_confusion_matrix(test_y, pred_y, condensed_classes):
     cm = confusion_matrix(test_y__, pred_y__)
     # Normalise
     cmn = cm.astype('float')/cm.sum(axis=1)[:, np.newaxis]
-    fig, ax = plt.subplots(figsize=(12,8))
+    fig, ax = plt.subplots(figsize=(8,6))
     sns.heatmap(cmn, annot=True, fmt='.2f', xticklabels=target_names, yticklabels=target_names)
     plt.ylabel('Actual')
     plt.xlabel('Predicted')
-    plt.show(block=False)
-
+    #plt.show(block=False)
+    return fig
 
 #%%
 #
@@ -101,7 +163,10 @@ class DataHandler():
         self.normalize_features = True
         self.NACE_classification = True
         
-        self.path_db = os.path.abspath(os.getcwd())+'\\db_generation\\db'
+        if os.name == 'nt':
+            self.path_db = os.path.abspath(os.getcwd())+'\\db_generation\\db'   
+        else: 
+            self.path_db = os.path.abspath(os.getcwd())+'/db_generation/db'           
 
 
     @property
@@ -225,12 +290,12 @@ class DataHandler():
 #
 # class used to convert a dataset into the proper torch format
 class TorchDatasetsGenerator():
-    def __init__(self,VAL_PCT = 0.2, shuffle_on = True):
+    def __init__(self,VAL_PCT = 0.2, disable_shuffle = False):
         self.VAL_PCT = VAL_PCT
-        self.shuffle_on = shuffle_on 
+        self.disable_shuffle = disable_shuffle 
         
     def generate_torch_dataset(self,X,y):
-        if self.shuffle_on:
+        if not self.disable_shuffle:
             while True:
                 training_data = [X,y]
                 np.random.shuffle(training_data)

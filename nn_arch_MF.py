@@ -285,8 +285,12 @@ class Net(nn.Module):
     # plot the training history
     def plot_training_log(self, init_epoch=0, final_epoch =-1):
         log_norm_df=(self.log_df-self.log_df.min())/(self.log_df.max()-self.log_df.min())
-        plt.figure()
-        log_norm_df[init_epoch:final_epoch][['Loss Train','Loss Test']].plot()
+        #fig, ax = plt.subplots()
+        fig = plt.figure(figsize=(12, 12))
+        #ax = fig.gca()
+        ax = log_norm_df[init_epoch:final_epoch][['Loss Train','Loss Test']].plot()
+        fig = ax.get_figure()
+        return fig
         
         
 
