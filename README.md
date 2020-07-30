@@ -12,11 +12,11 @@
     
 ## IMPORTANT!!
 The pre-trained net loaded in \\log has been trained with CUDA (gpu).
-If CUSA is not available in the user's machine, the following should be set:
+If CUDA is not available in the user's machine, the following should be set:
 
     net_name = 'insert_new_name'
     load_net_params = False
     train_net       = True
     save_net_params = True
     
-In this case also the net.EPOCHS parameter should be updated (suggested net.EPOCHS=400).
+In this case also the net.EPOCHS parameter should be increased for the first training (suggested net.EPOCHS=350).
