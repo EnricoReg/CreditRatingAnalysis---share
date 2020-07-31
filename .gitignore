@@ -126,4 +126,4 @@ dmypy.json
 
 
 #path setup file
-setup_path.py/
+**/setup_path.py
