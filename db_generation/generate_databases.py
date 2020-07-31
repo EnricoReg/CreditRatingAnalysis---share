@@ -26,6 +26,8 @@ save_database_no_year = True
 save_database_ratios = True
 
 run_imputation = True
+run_imputation_zeros_to_nan = True
+
 save_imputed_db = True 
 
 
@@ -257,7 +259,7 @@ if save_database_ratios:
 
 
 #%%
-# EM imputation
+# EM imputation (zeros as valid entries)
 
 if run_imputation:
 
@@ -275,4 +277,26 @@ if run_imputation:
     df_X_imp_nace.loc[:,'Total assets':'CCC proxi'] = X_imp
     if save_imputed_db:
         filename = os.path.join(path_db, 'features_ratio_imputed.pkl')
+        df_X_imp_nace.to_pickle(filename)
+
+
+#%%
+# EM imputation (zeros as NaNs)
+
+if run_imputation_zeros_to_nan:
+
+    X_incomplete = df_X[['Total assets', 'Current Ratio', 'Quick Ratio', 'Cash Ratio', 'ROA',
+           'ROE', 'D/E', 'ROIC', 'Tang/Total Assets', 'CCC proxi']].values
+    
+    X_incomplete[X_incomplete==0]= np.nan
+        
+    imp_result = impute_em(X_incomplete, max_iter = 120, eps = 0.1)
+    X_imp = imp_result['X_imputed']
+    
+    
+    
+    df_X_imp_nace = df_X
+    df_X_imp_nace.loc[:,'Total assets':'CCC proxi'] = X_imp
+    if save_imputed_db:
+        filename = os.path.join(path_db, 'features_ratio_imputed_zeros_as_nans.pkl')
         df_X_imp_nace.to_pickle(filename)

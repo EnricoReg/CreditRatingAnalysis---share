@@ -156,6 +156,7 @@ class DataHandler():
 #        self.NACE_parent = False        #outputs NACE parent code among features
         self.ratios_db = True          #if True: uses ratios DB instead
         self.imputed_db = False  # only evaluated in case ratios_db==True
+        self.imputed_zeros_as_nans=False
         
         self.condensed_classes = False  #if True: uses unique rating classes for AAA/AA/A and CC/C/D
         self.SME_only = False
@@ -216,7 +217,10 @@ class DataHandler():
         # load features
         if self.ratios_db:
             if self.imputed_db:
-                df_X = pd.read_pickle(os.path.join(self.path_db, 'features_ratio_imputed.pkl'))
+                if self.imputed_zeros_as_nans:
+                    df_X = pd.read_pickle(os.path.join(self.path_db, 'features_ratio_imputed_zeros_as_nans.pkl'))
+                else:
+                    df_X = pd.read_pickle(os.path.join(self.path_db, 'features_ratio_imputed.pkl'))
             else:    
                 df_X = pd.read_pickle(os.path.join(self.path_db, 'features_ratio.pkl'))        
         else:
