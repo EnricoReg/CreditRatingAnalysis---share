@@ -1,0 +1,14 @@
+This work presents an analysis of the practical problems related to the estimation of a credit rating for SMEs, when limited financial information is available. It exploits Machine Learning (ML) techniques to analyze the datasets.
+We focus on German small companies, due to the particular regulation environment which characterizes that country: In Germany small companies are only supposed to present their Balance Sheet information, without a specific duty to disclose all details of the different accounts. 
+
+The data which we considered is a collection of three years of Balance Sheets (2016-18), and the corresponding credit rating for each year, including several entries with missing items (or “features” in ML terminology). It was provided by ModeFinance (MF), an independent rating agency which calculates the scores based on publicly available data, via automatized AI based algorithms. We also report the reasons which led to the rise of small independent rating agencies like MF in Europe in the past decade.
+When assessing the credit worthiness of a company, the most meaningful data are the fundamentals represented by financial ratios extracted mainly from Balance Sheet and Income Statement. Given the lack of the latter in the available data, we analyze which indicators are directly computable, and which ones can be approximated based on the available information.
+
+In the final part of this work, we compare two different approaches for the identification of a pattern between Balance Sheet information and the credit rating, under the assumption that the value provided by MF is the “correct” one. Both approaches belong to the “Supervised Machine Learning” techniques:
+    1. The first method is based on a fully “black box” Neural Network (NN), which elaborates the raw Balance Sheet data, and is by construction able to deal with missing entries. This approach ideally is able to extract all the information form the dataset, therefore will be used as a benchmark;
+    2. The second approach can be seen as “grey box”, and requires several processing steps for the original dataset, and some a-priori assumptions:
+        a. Calculation of the financial indicators/fundamentals (approximations introduced have to be valid);
+        b. Imputation of the missing features (dataset entries are instances from a multivariate normal distribution);
+        c. Classification of the imputed dataset with a method “simpler” than NN (Random Forest Classifier).
+        
+The presented results show that the second method performs similarly to the first one, in estimating the credit rating of companies, suggesting that the assumptions introduced can be a valid starting point for further analysis. 
